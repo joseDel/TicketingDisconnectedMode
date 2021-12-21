@@ -58,22 +58,27 @@ namespace TicketingDisconnectedMode.ConsoleApp
         {
             Console.WriteLine("Lista dei ticket in ordine cronologico.");
             int id;
-            Ticket t;
+            Ticket t = null;
             StampaTicketOrdineCronologico();
             Console.WriteLine("\nDigita l'Id del ticket da eliminare.");
 
-            while (!int.TryParse(Console.ReadLine(), out id))
+            while (!(int.TryParse(Console.ReadLine(), out id)) ||(t == null))
             {
-                Console.WriteLine("Inserisci un id numerico!");
-            }
+                if ((id is int) == false)
+                    Console.WriteLine("Inserisci un id numerico!");
+                else
+                {
+                    t = mainBL.FindTicketById(id);
+                    if (t == null)
+                    {
+                        Console.WriteLine("Nessun ticket corrisponde all'id inserito. Controlla meglio!");
+                        Console.WriteLine("Digita l'Id del ticket da eliminare.");
+                    }
+                    else
+                        break;
+                }
 
-            do
-            {
-                t = mainBL.FindTicketById(id);
-                if (t == null)
-                    Console.WriteLine("Nessun ticket corrisponde all'id inserito. Controlla meglio!");
             }
-            while (t == null);
 
             bool deleted = mainBL.DeleteTicket(t);
 
